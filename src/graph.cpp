@@ -93,3 +93,31 @@ std::stack<int> SGraph::ShortestPath(const int v_from, const int v_to) const {
 
     return result;
 }
+
+std::vector<int> SGraph::ShortestPathToAll(const int v_from) const {
+    std::vector<int> length(matrix_.size(), INT_MAX);
+    std::vector<int> mark(matrix_.size(), 0);
+    std::vector<int> history(matrix_.size(), -1);
+
+    int vertex = v_from;
+    length[vertex] = 0;
+    while (vertex != -1) {
+        mark[vertex] = 1;
+        for (int i = 0; i < matrix_.size(); i++) {
+            if (matrix_[vertex][i] && mark[i] == 0 && length[i] > length[vertex] + 1) {
+                length[i] = length[vertex] + 1;
+                history[i] = vertex;
+            }
+        }
+        int min = INT_MAX;
+        vertex = -1;
+        for (int i = 0; i < matrix_.size(); i++) {
+            if (mark[i] == 0 && length[i] < min) {
+                vertex = i;
+                min = length[i];
+            }
+        }
+    }
+
+    return length;
+}

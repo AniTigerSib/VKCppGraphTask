@@ -10,7 +10,6 @@ struct Configuration {
     int vertex_count = 0;
     std::stack<std::pair<int, int>> edges;
     int from = 0;
-    int to = 0;
 };
 
 Configuration Configure();
@@ -19,18 +18,15 @@ int main() {
     SGraph *graph_p = nullptr;
 
     try {
-        auto [edge_count, vertex_count, edges, from, to] = Configure();
+        auto [edge_count, vertex_count, edges, from] = Configure();
         graph_p = new SGraph(vertex_count);
         for (int i = 0; i < edge_count; i++) {
             graph_p->AddEdge(edges.top().first, edges.top().second);
             edges.pop();
         }
-        // graph_p->Print();
-        auto res = graph_p->ShortestPath(from, to);
-        std::cout << from << std::endl;
-        while (!res.empty()) {
-            std::cout << res.top() << std::endl;
-            res.pop();
+        auto res = graph_p->ShortestPathToAll(from);
+        for (auto i : res) {
+            std::cout << i << std::endl;
         }
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
@@ -55,7 +51,7 @@ Configuration Configure() {
         ifs >> edge.first >> edge.second;
         config.edges.push(edge);
     }
-    ifs >> config.from >> config.to;
+    ifs >> config.from;
 
     return config;
 }

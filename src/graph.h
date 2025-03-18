@@ -36,6 +36,7 @@ public:
     void AddEdge(int v0, int v1) noexcept;
     void DeleteEdge(int v0, int v1) noexcept;
     [[nodiscard]] std::stack<int> ShortestPath(int v_from, int v_to) const;
+    [[nodiscard]] std::vector<int> ShortestPathToAll(int v_from) const;
 };
 
 class SGraphException final : public std::exception {
