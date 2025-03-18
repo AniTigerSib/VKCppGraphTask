@@ -4,7 +4,6 @@
 
 #include "graph.h"
 
-#include <deque>
 #include <stack>
 
 Matrix::Matrix(const int size) {
@@ -31,14 +30,30 @@ void Matrix::Print() const {
     }
 }
 
-void SGraph::AddEdge(const int v0, const int v1) {
+void SGraph::AddEdge(const int v0, const int v1) noexcept {
     this->Set(v0, v1, 1);
     this->Set(v1, v0, 1);
 }
 
-void SGraph::DeleteEdge(const int v0, const int v1) {
+void SGraph::DeleteEdge(const int v0, const int v1) noexcept {
     this->Set(v0, v1, 0);
     this->Set(v1, v0, 0);
+}
+
+void PrintDebug(const std::vector<int>& length, const std::vector<int>& mark, const std::vector<int>& history) {
+    std::cout << "Length: ";
+    for (const int i : length) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl << "Mark: ";
+    for (const int i : mark) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl << "History: ";
+    for (const int i : history) {
+        std::cout << i << " ";
+    }
+    std::cout << "\n\n";
 }
 
 std::stack<int> SGraph::ShortestPath(const int v_from, const int v_to) const {
@@ -51,8 +66,8 @@ std::stack<int> SGraph::ShortestPath(const int v_from, const int v_to) const {
     length[vertex] = 0;
     while (vertex != v_to && vertex != -1) {
         mark[vertex] = 1;
-        for (int i = 0; i < matrix_.size() && matrix_[vertex][i]; i++) {
-            if (mark[i] == 0 && length[i] > length[vertex] + 1) {
+        for (int i = 0; i < matrix_.size(); i++) {
+            if (matrix_[vertex][i] && mark[i] == 0 && length[i] > length[vertex] + 1) {
                 length[i] = length[vertex] + 1;
                 history[i] = vertex;
             }
