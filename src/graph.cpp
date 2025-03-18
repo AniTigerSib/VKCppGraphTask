@@ -4,6 +4,9 @@
 
 #include "graph.h"
 
+#include <deque>
+#include <stack>
+
 Matrix::Matrix(const int size) {
     matrix_.resize(size);
     for (int i = 0; i < size; i++) {
@@ -38,7 +41,40 @@ void SGraph::DeleteEdge(const int v0, const int v1) {
     this->Set(v1, v0, 0);
 }
 
-SGraph SGraph::ShortestPath(int v_from, int v_to) const {
+std::stack<int> SGraph::ShortestPath(const int v_from, const int v_to) const {
+    std::vector<int> length(matrix_.size(), INT_MAX);
+    std::vector<int> mark(matrix_.size(), 0);
+    std::vector<int> history(matrix_.size(), -1);
+    std::stack<int> result;
 
+    int vertex = v_from;
+    length[vertex] = 0;
+    while (vertex != v_to && vertex != -1) {
+        mark[vertex] = 1;
+        for (int i = 0; i < matrix_.size() && matrix_[vertex][i]; i++) {
+            if (mark[i] == 0 && length[i] > length[vertex] + 1) {
+                length[i] = length[vertex] + 1;
+                history[i] = vertex;
+            }
+        }
+        int min = INT_MAX;
+        vertex = -1;
+        for (int i = 0; i < matrix_.size(); i++) {
+            if (mark[i] == 0 && length[i] < min) {
+                vertex = i;
+                min = length[i];
+            }
+        }
+    }
+
+    if (vertex == -1) {
+        throw SGraphException("SGraph::ShortestPath: No path exists");
+    }
+
+    while (vertex != v_from) {
+        result.push(vertex);
+        vertex = history[vertex];
+    }
+
+    return result;
 }
-

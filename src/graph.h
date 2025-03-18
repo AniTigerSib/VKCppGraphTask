@@ -5,6 +5,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include <iostream>
+#include <stack>
 #include <vector>
 
 class Matrix {
@@ -33,7 +34,17 @@ public:
     ~SGraph() override = default;
     void AddEdge(int v0, int v1);
     void DeleteEdge(int v0, int v1);
-    [[nodiscard]] SGraph ShortestPath(int v_from, int v_to) const;
+    [[nodiscard]] std::stack<int> ShortestPath(int v_from, int v_to) const;
+};
+
+class SGraphException final : public std::exception {
+public:
+    explicit SGraphException(const char *msg = "SGraph exception") : msg_(msg) {}
+    [[nodiscard]] char const *what() const {
+        return msg_;
+    }
+private:
+    char const *msg_;
 };
 
 #endif //GRAPH_H
